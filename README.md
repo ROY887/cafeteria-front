@@ -20,8 +20,6 @@ BACKEND_ORIGIN=http://192.168.0.10:8000 npm run dev
 
 ## 担当とファイル構成
 
-各ファイルの先頭に担当者を書いている。**自分の担当外のファイルは基本的に編集しない**（変更が必要なら担当者に相談する）。
-
 | 担当 | 名前 | ファイル |
 |---|---|---|
 | 1人目 全体設計・メインUI | 松永 | `src/App.tsx` `src/pages/Home.tsx` `src/components/Header.tsx` |
@@ -50,86 +48,64 @@ src/
     └── UpdateTime.tsx       ← 増田
 ```
 
-### 担当間の受け渡し（型）
 
-- 受信データの型 `AreaOccupancy` / `OccupancyMessage` は `src/api/websocket.ts` に定義している。
-- 画面側は `useOccupancy()` から `{ areas, updatedAt, connection }` を受け取る。
-- 型や props を変えるときは、使っている側の担当者に先に連絡する。
+## Git の使い方
 
-## Git の使い方（変更をみんなに反映する手順）
-
-`main` には直接 push せず、**自分のブランチ → Pull Request → main にマージ** の流れで反映する。
+覚えるのは **`npm run sync` だけ**。ブランチや Pull Request は使わない。
 
 ### 最初の1回だけ
 
 ```bash
-git clone git@github.com:ROY887/cafeteria-front.git
+git clone https://github.com/ROY887/cafeteria-front.git
 cd cafeteria-front
 npm install
+git config --global user.name "自分の名前"
+git config --global user.email "GitHubに登録したメールアドレス"
 ```
 
-### 作業を始めるとき
-
-`main` を最新にしてから、自分のブランチを作る。ブランチ名は `feature/名前-内容` にする。
+### 毎回の作業
 
 ```bash
-git switch main
-git pull
-git switch -c feature/kanda-websocket
+npm run sync                      # 作業を始める前（みんなの最新を取り込む）
 ```
 
-ブランチ名の例:
-
-| 担当 | ブランチ名の例 |
-|---|---|
-| 松永 | `feature/matsunaga-layout` |
-| 神田 | `feature/kanda-websocket` |
-| 川田 | `feature/kawata-area-card` |
-| 増田 | `feature/masuda-status-ui` |
-
-### 作業を保存する（こまめに）
+（作業する）
 
 ```bash
-git status                # 変更したファイルを確認
-git add src/hooks/useOccupancy.ts
-git commit -m "useOccupancy: 自動再接続を追加"
+npm run sync -- "やったこと"        # 作業が終わったら（自分の変更をみんなに反映する）
 ```
 
-### GitHub に上げて Pull Request を作る
+例: `npm run sync -- "AreaCardに色を付けた"`
+
+`npm run sync` は次のことを自動で行う。
+
+1. 自分の変更を保存（コミット）
+2. GitHub からみんなの最新を取り込む
+3. ビルドが通るか確認（通らなければ GitHub には上げない）
+4. GitHub に上げる（push）
+
+### 「✗」が出たら
+
+**何も操作せず、その画面を神田に送る。** 自分の変更は消えていないので安心してよい。
+
+ただし「ビルドに失敗したので、GitHub には上げていません」の場合は、表示されたエラーを直してからもう一度 `npm run sync -- "やったこと"` を実行すればよい（直せなければ神田へ）。
+
+### 使わないコマンド
+
+`npm run sync` 以外の git コマンド（`git push` `git pull` `git reset` `git switch` など）は使わない。
+
+---
+
+## 神田向け: 衝突の直し方
+
+メンバーから「衝突しました」と連絡が来たら、そのメンバーの PC で次を行う。
 
 ```bash
-npm run build             # エラーが出ないことを確認してから上げる
-git push -u origin feature/kanda-websocket
-```
-
-push したら GitHub のリポジトリページに出る「Compare & pull request」ボタンから PR を作る
-（`gh` コマンドが使える人は `gh pr create --fill` でもよい）。
-誰か1人に確認してもらってから「Merge pull request」で `main` に取り込む。
-
-### 他の人の変更を自分のブランチに取り込む
-
-他の人の PR が `main` にマージされたら、自分のブランチにも取り込んでおく。
-
-```bash
-git switch main
-git pull
-git switch feature/kanda-websocket
-git merge main
-```
-
-### コンフリクト（衝突）が起きたら
-
-ファイル内の `<<<<<<<` `=======` `>>>>>>>` の部分を、正しい内容に直して印を消す。
-
-```bash
+git pull --rebase origin main     # 衝突したファイルが表示される
+# ファイル内の <<<<<<< ======= >>>>>>> を直して印を消す
 git add <直したファイル>
-git commit
+git rebase --continue
+npm run sync
 ```
 
-自分の担当外のファイルで衝突した場合は、そのファイルの担当者と相談して直す。
-
-### やってはいけないこと
-
-- `git push --force`（他の人の変更を消してしまう）
-- `main` ブランチでの直接作業・直接 push
-- `node_modules/` や `dist/` をコミットすること（`.gitignore` で除外済み）
+途中でやめたいときは `git rebase --abort` で取り込む前の状態に戻る。
