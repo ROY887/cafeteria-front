@@ -169,7 +169,7 @@ for (let i = 1; i <= MAX_PUSH_TRIES; i++) {
 
   console.log('▶ GitHub に上げています...')
   if (run('git', ['push', 'origin', BRANCH]).ok) {
-    console.log('\n✓ 完了しました。みんなの画面にも反映されます。\n')
+    console.log('\n✓ 完了しました\n')
     process.exit(0)
   }
   // 直前に誰かが push していた場合はもう一度取り込んでやり直す
