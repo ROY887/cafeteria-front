@@ -20,33 +20,66 @@ BACKEND_ORIGIN=http://192.168.0.10:8000 npm run dev
 
 ## 担当とファイル構成
 
-| 担当 | 名前 | ファイル |
+担当ごとにフォルダを分けている。**自分のフォルダの中だけを変更する**（新しいファイルも自分のフォルダに作ってよい）。
+他の人のフォルダを変えたいときは、その人に相談する。
+
+| 担当 | 名前 | フォルダ |
 |---|---|---|
-| 1人目 全体設計・メインUI | 松永 | `src/App.tsx` `src/pages/Home.tsx` `src/components/Header.tsx` |
-| 2人目 リアルタイム通信・API連携 | 神田 | `src/api/websocket.ts` `src/hooks/useOccupancy.ts` |
-| 3人目 混雑表示UI・食堂マップ | 川田 | `src/components/AreaCard.tsx` `OccupancyBar.tsx` `StatusLabel.tsx` `CafeteriaMap.tsx` |
-| 4人目 補助UI・レスポンシブ対応 | 増田 | `src/components/Loading.tsx` `ErrorMessage.tsx` `ConnectionStatus.tsx` `UpdateTime.tsx` |
+| 1人目 全体設計・メインUI | 松永 | `src/app/` |
+| 2人目 リアルタイム通信・API連携 | 神田 | `src/realtime/` |
+| 3人目 混雑表示UI・食堂マップ | 川田 | `src/occupancy/` |
+| 4人目 補助UI・レスポンシブ対応 | 増田 | `src/status/` |
 
 ```
 src/
-├── App.tsx                  ← 松永
-├── pages/
-│   └── Home.tsx             ← 松永
-├── api/
-│   └── websocket.ts         ← 神田
-├── hooks/
-│   └── useOccupancy.ts      ← 神田
-└── components/
-    ├── Header.tsx           ← 松永
-    ├── AreaCard.tsx         ← 川田
-    ├── OccupancyBar.tsx     ← 川田
-    ├── StatusLabel.tsx      ← 川田
-    ├── CafeteriaMap.tsx     ← 川田
-    ├── Loading.tsx          ← 増田
-    ├── ErrorMessage.tsx     ← 増田
-    ├── ConnectionStatus.tsx ← 増田
-    └── UpdateTime.tsx       ← 増田
+├── main.tsx                 ← 起動処理（共通・基本触らない）
+├── index.css                ← 共通
+├── app/                     ← 松永
+│   ├── App.tsx
+│   ├── Home.tsx
+│   └── Header.tsx
+├── realtime/                ← 神田
+│   ├── websocket.ts
+│   └── useOccupancy.ts
+├── occupancy/               ← 川田
+│   ├── AreaCard.tsx
+│   ├── OccupancyBar.tsx
+│   ├── StatusLabel.tsx
+│   └── CafeteriaMap.tsx
+└── status/                  ← 増田
+    ├── Loading.tsx
+    ├── ErrorMessage.tsx
+    ├── ConnectionStatus.tsx
+    └── UpdateTime.tsx
 ```
+
+他の人のフォルダのものを使うときは `import` で読み込む。
+
+```ts
+// 例: app/Home.tsx から
+import { useOccupancy } from '../realtime/useOccupancy'
+import AreaCard from '../occupancy/AreaCard'
+```
+
+## 動作確認（Preview）
+
+自分の部品を確かめるために **他の人のファイル（Home.tsx など）を書き換えない**。
+`npm run sync` はすべての変更を push するので、一時的な書き換えもみんなに反映されてしまう。
+
+代わりに、自分のフォルダに `Preview.tsx` を作る。
+
+```tsx
+// 例: src/occupancy/Preview.tsx
+import AreaCard from './AreaCard'
+
+export default function Preview() {
+  return <AreaCard name="窓側エリア" rate={60} />
+}
+```
+
+`npm run dev` の後、`http://localhost:5173/?preview=フォルダ名` を開くとその Preview だけが表示される
+（例: `?preview=occupancy`）。仮データは Preview.tsx の中に書けばよい。
+`main.tsx` を変更する必要はない。本番では `?preview` を付けても通常の画面が出る。
 
 
 ## Git の使い方
