@@ -81,7 +81,6 @@ export default function Preview() {
 （例: `?preview=occupancy`）。仮データは Preview.tsx の中に書けばよい。
 `main.tsx` を変更する必要はない。本番では `?preview` を付けても通常の画面が出る。
 
-
 ## Git の使い方
 
 覚えるのは **`npm run sync` だけ**。ブランチや Pull Request は使わない。

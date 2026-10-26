@@ -1,4 +1,3 @@
-// 担当: 2人目 神田（リアルタイム通信・API連携）
 // 動作確認用: http://localhost:5173/?preview=realtime
 import { useOccupancy } from './useOccupancy'
 
