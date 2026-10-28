@@ -1,5 +1,5 @@
 // 担当: 1人目 松永（全体設計・メインUI）
-import React, { useState } from "react";
+import { useState } from "react";
 import Layout from "./Layout";
 import Home from "./Home";
 import type { AreaData } from "./congestion";
