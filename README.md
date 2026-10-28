@@ -83,7 +83,7 @@ export default function Preview() {
 
 ## Git の使い方
 
-覚えるのは **`npm run sync` だけ**。ブランチや Pull Request は使わない。
+使うのは`npm run sync` だけ。ブランチや Pull Request は使わない。
 
 ### 最初の1回だけ
 

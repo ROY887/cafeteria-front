@@ -1,6 +1,4 @@
-// 担当: 3人目 川田（混雑表示UI・食堂マップ）
 // 動作確認用: http://localhost:5173/?preview=occupancy
-//
 // 部品ができたら import して、仮データで並べて確認する。例:
 //
 //   import type { AreaOccupancy } from '../realtime/websocket'
