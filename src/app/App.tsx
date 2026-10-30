@@ -1,20 +1,20 @@
 // 担当: 1人目 松永（全体設計・メインUI）
-import { useState } from "react";
 import Layout from "./Layout";
 import Home from "./Home";
 import type { AreaData } from "./congestion";
+import { useOccupancy } from "../realtime/useOccupancy";
 
 export default function App() {
-  // アスキーアートに合わせた初期データ
-  const [updatedAt] = useState("12:00:01");
-  const [areas] = useState<AreaData[]>([
-    { id: "window", name: "窓側エリア", rate: 60 },
-    { id: "center", name: "中央エリア", rate: 80 },
-    { id: "entrance", name: "入口エリア", rate: 20 },
-  ]);
+  // WebSocket で受信した混雑状況（神田担当の useOccupancy）を画面用の形に変換する
+  const { areas: received, updatedAt } = useOccupancy();
+  const areas: AreaData[] = received.map((area) => ({
+    id: area.area_id,
+    name: area.label,
+    rate: area.occupancy_rate,
+  }));
 
   return (
-    <Layout updatedAt={updatedAt}>
+    <Layout updatedAt={updatedAt?.toLocaleTimeString("ja-JP")}>
       <Home areas={areas} />
     </Layout>
   );

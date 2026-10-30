@@ -1,8 +1,3 @@
-// バックエンド仕様: WS /ws/status（本番は Nginx が /api/ を FastAPI へ転送するので /api/ws/status）
-// 接続直後に1回、その後は1秒ごとに次の形式で届く:
-// { "updated_at": "2026-06-29T12:00:01.234Z",
-//   "areas": [ { "area_id": "A", "label": "窓側エリア", "occupancy_rate": 60 } ] }
-
 export type AreaOccupancy = {
   area_id: string
   label: string // 例: 窓側エリア
