@@ -11,7 +11,7 @@ npm run dev
 
 http://localhost:5173 で「食堂混雑状況」が表示される。
 
-`/ws` と `/api` へのリクエストはバックエンド（既定 `http://localhost:8000`）へプロキシされる。
+`/api/` 以下へのリクエストは、先頭の `/api` を外してバックエンド（既定 `http://localhost:8000`）へ転送される（本番の Nginx と同じ。例: `/api/ws/status` → `/ws/status`）。
 別ホストのバックエンドを使う場合:
 
 ```bash
